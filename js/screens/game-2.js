@@ -1,23 +1,16 @@
-import {generatePage, getDomFromHtml} from '../utils';
+import {renderPage, renderDom} from '../utils';
+import greeting from './greeting';
 import gameThird from './game-3';
 
-const gameTwoHtml = `<header class="header">
-<div class="header__back">
-  <span class="back">
-    <img src="img/arrow_left.svg" width="45" height="45" alt="Back">
-    <img src="img/logo_small.png" width="101" height="44">
-  </span>
-</div>
-<h1 class="game__timer">NN</h1>
-<div class="game__lives">
-  <img src="img/heart__empty.svg" class="game__heart" alt="Life" width="32" height="32">
-  <img src="img/heart__full.svg" class="game__heart" alt="Life" width="32" height="32">
-  <img src="img/heart__full.svg" class="game__heart" alt="Life" width="32" height="32">
-</div>
-</header>
+import * as data from '../data';
+import header from '../elems/header';
+import footer from '../elems/footer';
+import statsBlock from '../elems/statsBlock';
+
+const gameTwoHtml = `${header(data.rules)}
 <div class="game">
-<p class="game__task">Угадай, фото или рисунок?</p>
-<form class="game__content  game__content--wide">
+<p class="game__task">${data.games[`level-1`].task}</p>
+<form class="game__content game__content--wide">
   <div class="game__option">
     <img src="http://placehold.it/705x455" alt="Option 1" width="705" height="455">
     <label class="game__answer  game__answer--photo">
@@ -30,32 +23,11 @@ const gameTwoHtml = `<header class="header">
     </label>
   </div>
 </form>
-<div class="stats">
-  <ul class="stats">
-    <li class="stats__result stats__result--wrong"></li>
-    <li class="stats__result stats__result--slow"></li>
-    <li class="stats__result stats__result--fast"></li>
-    <li class="stats__result stats__result--correct"></li>
-    <li class="stats__result stats__result--wrong"></li>
-    <li class="stats__result stats__result--unknown"></li>
-    <li class="stats__result stats__result--slow"></li>
-    <li class="stats__result stats__result--unknown"></li>
-    <li class="stats__result stats__result--fast"></li>
-    <li class="stats__result stats__result--unknown"></li>
-  </ul>
 </div>
-</div>
-<footer class="footer">
-<a href="https://htmlacademy.ru" class="social-link social-link--academy">HTML Academy</a>
-<span class="footer__made-in">Сделано в <a href="https://htmlacademy.ru" class="footer__link">HTML Academy</a> &copy; 2016</span>
-<div class="footer__social-links">
-  <a href="https://twitter.com/htmlacademy_ru" class="social-link  social-link--tw">Твиттер</a>
-  <a href="https://www.instagram.com/htmlacademy/" class="social-link  social-link--ins">Инстаграм</a>
-  <a href="https://www.facebook.com/htmlacademy" class="social-link  social-link--fb">Фэйсбук</a>
-  <a href="https://vk.com/htmlacademy" class="social-link  social-link--vk">Вконтакте</a>
-</div>
-</footer>`;
-const gameTwoElement = getDomFromHtml(gameTwoHtml);
+${statsBlock(data.statsArray)}
+${footer}`;
+
+const gameTwoElement = renderDom(gameTwoHtml);
 const form = gameTwoElement.querySelector(`.game__content`);
 const radioElements = form.querySelectorAll(`input[type='radio']`);
 
@@ -63,9 +35,14 @@ Array.from(radioElements).forEach((item) => {
   item.addEventListener(`change`, () => {
     const questionGroup = form.querySelector(`input[name="question1"]:checked`);
     if (questionGroup) {
-      generatePage(gameThird);
+      renderPage(gameThird);
     }
   });
 });
+
+const backButton = gameTwoElement.querySelector(`.header__back`);
+backButton.onclick = () => {
+  renderPage(greeting);
+};
 
 export default gameTwoElement;

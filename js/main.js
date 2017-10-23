@@ -1,4 +1,4 @@
 import introElement from './screens/intro';
-import {generatePage} from './utils';
+import {renderPage} from './utils';
 
-generatePage(introElement);
+renderPage(introElement);

@@ -7,9 +7,7 @@ const backButton = `<div class="header__back">
 </span>
 </div>`;
 
-const header = (state) => `<header class="header">
-${backButton}
-<h1 class="game__timer">${state.time}</h1>
+const gameInfo = (state) => `<h1 class="game__timer">${rules.time}</h1>
 <div class="game__lives">
   ${new Array(state.lives)
     .fill(`<img src="img/heart__full.svg" class="game__heart" alt="Life" width="32" height="32">`)
@@ -19,5 +17,9 @@ ${backButton}
     .join(``)}
 </div>
 </header>`;
+
+const header = (state) => `<header class="header">
+${backButton}
+${(!state) ? `</header>` : gameInfo(state)}`;
 
 export default header;

@@ -1,9 +1,9 @@
 const pageWrapper = document.querySelector(`.central`);
 
 export const renderDom = (html) => {
-  const template = document.createElement(`template`);
+  const template = document.createElement(`div`);
   template.innerHTML = html;
-  return template.content;
+  return template;
 };
 
 export const renderPage = (element) => {

@@ -1,6 +1,6 @@
 import {renderPage, renderDom} from '../utils';
-import rules from './rules';
-import footer from '../elems/footer';
+import rulesDom from './rules';
+import footer from '../templates/footer';
 
 const greetingHtml = `<div class="greeting central--blur">
 <div class="greeting__logo"><img src="img/logo_big.png" width="201" height="89" alt="Pixel Hunter"></div>
@@ -17,9 +17,11 @@ const greetingHtml = `<div class="greeting central--blur">
 </div>
 ${footer}`;
 
-const greetingElement = renderDom(greetingHtml);
-const continueElement = greetingElement.querySelector(`.greeting__continue`);
+const greetingDom = renderDom(greetingHtml);
+const continueElement = greetingDom.querySelector(`.greeting__continue`);
+
 continueElement.onclick = () => {
-  renderPage(rules);
+  renderPage(rulesDom);
 };
-export default greetingElement;
+
+export default greetingDom;

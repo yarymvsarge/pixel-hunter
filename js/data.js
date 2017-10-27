@@ -56,7 +56,7 @@ export const initialState = Object.freeze({
   stats: statsArray
 });
 
-//const states = new Set([...[`unknown`, `fast`, `slow`, `wrong`, `correct`]]);
+// const states = new Set([...[`unknown`, `fast`, `slow`, `wrong`, `correct`]]);
 
 const pictures = {
   paintings: [

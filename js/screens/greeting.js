@@ -1,6 +1,5 @@
 import {renderPage, renderDom} from '../utils';
 import rulesDom from './rules';
-import footer from '../templates/footer';
 
 const greetingHtml = `<div class="greeting central--blur">
 <div class="greeting__logo"><img src="img/logo_big.png" width="201" height="89" alt="Pixel Hunter"></div>
@@ -14,8 +13,7 @@ const greetingHtml = `<div class="greeting central--blur">
     Помни, главное — смотреть очень внимательно.</p>
 </div>
 <div class="greeting__continue"><span><img src="img/arrow_right.svg" width="64" height="64" alt="Next"></span></div>
-</div>
-${footer}`;
+</div>`;
 
 const greetingDom = renderDom(greetingHtml);
 const continueElement = greetingDom.querySelector(`.greeting__continue`);

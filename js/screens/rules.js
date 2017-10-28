@@ -4,7 +4,6 @@ import gameFirstDom from './game-1';
 
 import {rules, initialState} from '../data';
 import header from '../templates/header';
-import footer from '../templates/footer';
 
 const rulesHtml = `${header()}
 <div class="rules">
@@ -22,8 +21,7 @@ const rulesHtml = `${header()}
   <input class="rules__input" type="text" placeholder="Ваше Имя">
   <button class="rules__button  continue" type="submit" disabled>Go!</button>
 </form>
-</div>
-${footer}`;
+</div>`;
 
 const rulesDom = renderDom(rulesHtml);
 const form = rulesDom.querySelector(`.rules__form`);

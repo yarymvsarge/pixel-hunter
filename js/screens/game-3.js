@@ -4,7 +4,6 @@ import stats from './stats';
 
 import {games} from '../data';
 import header from '../templates/header';
-import footer from '../templates/footer';
 import statsBlock from '../templates/stats';
 
 const gameThree = (state) => {
@@ -19,14 +18,13 @@ const gameThree = (state) => {
   </div>
   <div class="stats">
   ${statsBlock(state.stats)}
-  </div>
-  ${footer}`;
+  </div>`;
   const gameThreeDom = renderDom(gameThreeHtml);
   const options = gameThreeDom.querySelectorAll(`.game__option`);
 
   Array.from(options).forEach((answer) => {
     answer.addEventListener(`click`, () => {
-      renderPage(stats);
+      renderPage(stats());
     });
   });
   const backButton = gameThreeDom.querySelector(`.header__back`);

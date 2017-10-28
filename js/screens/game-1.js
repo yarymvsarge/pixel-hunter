@@ -4,7 +4,6 @@ import gameSecondDom from './game-2';
 
 import {games} from '../data';
 import header from '../templates/header';
-import footer from '../templates/footer';
 import statsBlock from '../templates/stats';
 
 const gameOne = (state) => {
@@ -27,8 +26,7 @@ const gameOne = (state) => {
   </div>
   <div class="stats">
   ${statsBlock(state.stats)}
-  </div>
-  ${footer}`;
+  </div>`;
   const gameOneDom = renderDom(gameOneHtml);
   const form = gameOneDom.querySelector(`.game__content`);
   const radioElements = form.querySelectorAll(`input[type='radio']`);

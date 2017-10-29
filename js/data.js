@@ -157,3 +157,17 @@ export const countStats = (stats = {}) => {
   const livesBonus = stats.lives * LIVE_POINTS;
   return livesBonus + sum;
 };
+
+export const resize = (frame, given) => {
+  let multiplier = 1;
+  if (given.width > frame.width) {
+    multiplier = frame.width / given.width;
+  }
+  if (given.height * multiplier > frame.height) {
+    multiplier = frame.height / given.height;
+  }
+  return {
+    width: given.width * multiplier,
+    height: given.height * multiplier
+  };
+};

@@ -9,3 +9,4 @@ build/
 node_modules/
 Thumbs.db
 comment.js
+.vscode

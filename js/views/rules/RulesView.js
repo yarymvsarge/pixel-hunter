@@ -1,10 +1,11 @@
 import AbstractView from '../AbstractView';
-import header from '../../templates/header';
+import HeaderView from '../HeaderView';
 import {rules} from '../../data';
 
-export class RulesView extends AbstractView {
+export default class RulesView extends AbstractView {
   get template() {
-    return `${header()}
+    const header = new HeaderView();
+    return `${header.template}
     <div class="rules">
     <h1 class="rules__title">Правила</h1>
     <p class="rules__description">Угадай ${rules.games} раз для каждого изображения фото <img
@@ -30,7 +31,7 @@ export class RulesView extends AbstractView {
     const backButton = this.element.querySelector(`.header__back`);
     inputName.oninput = (evt) => {
       evt.preventDefault();
-      this.onInput();
+      this.onInput(inputName, nextButton);
     };
 
     nextButton.onclick = (evt) => {
@@ -44,8 +45,8 @@ export class RulesView extends AbstractView {
     };
   }
 
-  onInput() {
-    throw new Error(`You must to define listener on name input`);
+  onInput(input, button) {
+    throw new Error(`You must to define listener on inputting text`);
   }
 
   onNextButtonClick() {

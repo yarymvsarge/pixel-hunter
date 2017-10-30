@@ -1,6 +1,6 @@
 import AbstractView from '../AbstractView';
 
-export class IntroView extends AbstractView {
+export default class IntroView extends AbstractView {
   get template() {
     return `<div id="main" class="central__content">
       <div id="intro" class="intro">

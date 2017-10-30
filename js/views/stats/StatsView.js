@@ -1,14 +1,15 @@
 import AbstractView from '../AbstractView';
-import header from '../../templates/header';
+import HeaderView from '../HeaderView';
 import statsBlock from '../../templates/stats';
 
-export class RulesView extends AbstractView {
+export default class RulesView extends AbstractView {
   constructor(results) {
     super();
     this.state = results;
   }
   get template() {
-    return `${header()}
+    const header = new HeaderView();
+    return `${header.template}
     <div class="result">
     <h1>Победа!</h1>
     ${this.state.map((result) => `<table class="result__table">

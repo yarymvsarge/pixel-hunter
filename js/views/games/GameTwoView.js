@@ -1,15 +1,16 @@
 import AbstractView from '../AbstractView';
-import header from '../../templates/header';
+import HeaderView from '../HeaderView';
 import statsBlock from '../../templates/stats';
 import {games} from '../../data';
 
-export class GameTwoView extends AbstractView {
+export default class GameTwoView extends AbstractView {
   constructor(state) {
     super();
     this.state = state;
   }
   get template() {
-    return `${header(this.state)}
+    const header = new HeaderView(this.state);
+    return `${header.template}
     <div class="game">
     <p class="game__task">${games[`level-1`].task}</p>
     <form class="game__content game__content--wide">
@@ -36,9 +37,14 @@ export class GameTwoView extends AbstractView {
     Array.from(radioElements).forEach((item) => {
       item.addEventListener(`change`, (evt) => {
         evt.preventDefault();
-        this.onClickingRadio();
+        const checked = form.querySelectorAll(`input[type='radio']:checked`);
+        if (checked) {
+          this.onContinueGame();
+        }
       });
     });
+
+    this.resizeImages(form.querySelectorAll(`img`));
 
     const backButton = this.element.querySelector(`.header__back`);
     backButton.onclick = (evt) => {
@@ -47,7 +53,7 @@ export class GameTwoView extends AbstractView {
     };
   }
 
-  onClickingRadio() {
+  onContinueGame() {
     throw new Error(`You must to define listener on clicking radio buttons`);
   }
 

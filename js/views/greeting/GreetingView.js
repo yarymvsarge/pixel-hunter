@@ -1,6 +1,6 @@
 import AbstractView from '../AbstractView';
 
-export class GreetingView extends AbstractView {
+export default class GreetingView extends AbstractView {
   get template() {
     return `<div class="greeting central--blur">
     <div class="greeting__logo"><img src="img/logo_big.png" width="201" height="89" alt="Pixel Hunter"></div>

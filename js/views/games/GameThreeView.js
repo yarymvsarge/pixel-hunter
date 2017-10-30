@@ -1,15 +1,16 @@
 import AbstractView from '../AbstractView';
-import header from '../../templates/header';
+import HeaderView from '../HeaderView';
 import statsBlock from '../../templates/stats';
 import {games} from '../../data';
 
-export class GameThreeView extends AbstractView {
+export default class GameThreeView extends AbstractView {
   constructor(state) {
     super();
     this.state = state;
   }
   get template() {
-    return `${header(this.state)}
+    const header = new HeaderView(this.state);
+    return `${header.template}
     <div class="game">
     <p class="game__task">${games[`level-2`].task}</p>
     <form class="game__content game__content--triple">
@@ -24,12 +25,14 @@ export class GameThreeView extends AbstractView {
   }
   bind() {
     const options = this.element.querySelectorAll(`.game__option`);
+    const form = this.element.querySelector(`.game__content`);
     Array.from(options).forEach((answer) => {
       answer.addEventListener(`click`, (evt) => {
         evt.preventDefault();
-        this.onClickAnswer();
+        this.onContinueGame();
       });
     });
+    this.resizeImages(form.querySelectorAll(`img`));
 
     const backButton = this.element.querySelector(`.header__back`);
     backButton.onclick = (evt) => {
@@ -38,7 +41,7 @@ export class GameThreeView extends AbstractView {
     };
   }
 
-  onClickAnswer() {
+  onContinueGame() {
     throw new Error(`You must to define listener on clicking one of answers`);
   }
 

@@ -171,3 +171,56 @@ export const resize = (frame, given) => {
     height: given.height * multiplier
   };
 };
+
+// ONLY FOR EXAMPLE, WILL BE REMOVED
+export const bonuses = (state = {}) => {
+  return [
+    {
+      title: `Бонус за скорость`,
+      tag: `fast`,
+      amount: state.fast,
+      bonusPoints: points.fastAnswer,
+    },
+    {
+      title: `Бонус за жизни`,
+      tag: `heart`,
+      amount: state.lives,
+      bonusPoints: points.liveBonus,
+    },
+    {
+      title: `Штраф за медлительность`,
+      tag: `slow`,
+      amount: state.slow,
+      bonusPoints: points.slowAnswer,
+    },
+  ];
+};
+
+const res1 = {
+  fast: 1,
+  lives: 2,
+  slow: 2
+};
+
+const res2 = {
+  fast: 2,
+  lives: 2,
+  slow: 2
+};
+
+export const results = [
+  {
+    resultNumber: 1,
+    statsArray: [`correct`, `fast`, `slow`, `wrong`, `correct`, `correct`, `fast`, `slow`, `wrong`, `correct`],
+    resultTotal: 800,
+    bonuses: bonuses(res1),
+    finalResult: 950
+  },
+  {
+    resultNumber: 2,
+    statsArray: [`fast`, `fast`, `slow`, `wrong`, `correct`, `correct`, `fast`, `slow`, `wrong`, `correct`],
+    resultTotal: 800,
+    bonuses: bonuses(res2),
+    finalResult: 1050
+  }
+];

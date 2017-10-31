@@ -1,4 +1,4 @@
-import AbstractView from '../AbstractView';
+import AbstractView from '../abstract-view';
 
 export default class IntroView extends AbstractView {
   get template() {
@@ -13,10 +13,10 @@ export default class IntroView extends AbstractView {
     const asteriskElement = this.element.querySelector(`.intro__asterisk`);
     asteriskElement.onclick = (evt) => {
       evt.preventDefault();
-      this.onAsteriskClick();
+      this.onNext();
     };
   }
-  onAsteriskClick() {
+  onNext() {
     throw new Error(`You must to define listener to Intro Screen`);
   }
 }

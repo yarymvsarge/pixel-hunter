@@ -1,5 +1,5 @@
-export const renderPage = (element) => {
+export const renderPage = (view) => {
   const pageWrapper = document.querySelector(`.central`);
   pageWrapper.innerHTML = ``;
-  pageWrapper.appendChild(element);
+  pageWrapper.appendChild(view.element);
 };

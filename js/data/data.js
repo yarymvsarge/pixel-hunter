@@ -1,33 +1,26 @@
-const GAMES_COUNT = 10;
-const START_LIVES = 3;
-const TIME_FOR_GAME = 30;
 const FAST_ANSWER_BOUND_TIME = 20;
 const SLOW_ANSWER_BOUND_TIME = 10;
-const RIGHT_ANSWER_POINTS = 100;
-const FAST_ANSWER_POINTS = 50;
-const SLOW_ANSWER_POINTS = -50;
-const LIVE_POINTS = 50;
 
-export const rules = Object.freeze({
-  games: GAMES_COUNT,
-  lives: START_LIVES,
-  time: TIME_FOR_GAME
+export const CountRule = Object.freeze({
+  GAME: 10,
+  LIVE: 3,
+  TIME: 30
 });
 
-export const points = Object.freeze({
-  rightAnswer: RIGHT_ANSWER_POINTS,
-  fastAnswer: FAST_ANSWER_POINTS,
-  liveBonus: LIVE_POINTS,
-  slowAnswer: SLOW_ANSWER_POINTS
+export const BonusPoint = Object.freeze({
+  CORRECT: 100,
+  FAST: 50,
+  SLOW: -50,
+  LIVE: 50
 });
 
-const statsArray = Array(GAMES_COUNT).fill(`unknown`);
+const statsArray = Array(CountRule.GAME).fill(`unknown`);
 
 export const initialState = Object.freeze({
   currentGame: 0,
-  lives: rules.lives,
-  time: rules.time,
-  level: `level-0`,
+  lives: CountRule.LIVE,
+  time: CountRule.TIME,
+  level: 0,
   stats: statsArray
 });
 
@@ -46,23 +39,31 @@ const pictures = {
   ]
 };
 
-export const games = {
-  'level-0': {
+export const getRandom = (n) => Math.floor(Math.random() * n);
+
+export const games = [
+  {
+    // name: `TwoPhotoOrPicture`,
+    name: 0,
     task: `Угадайте для каждого изображения фото или рисунок?`,
-    question: new Set([...[pictures.paintings[0], pictures.photos[0]]]),
-    answer: [`painting`, `photo`]
+    question: [pictures.paintings[0], pictures.photos[0]],
+    answer: [`paint`, `photo`]
   },
-  'level-1': {
+  {
+    // name: `OnePhotoOrPicture`,
+    name: 1,
     task: `Угадай, фото или рисунок?`,
-    question: pictures.paintings[1],
-    answer: [`painting`]
+    question: [pictures.paintings[1]],
+    answer: [`paint`]
   },
-  'level-2': {
+  {
+    // name: `PictureAmongPhotos`,
+    name: 2,
     task: `Найдите рисунок среди изображений`,
-    question: new Set([...[pictures.photos[1], pictures.photos[2], pictures.paintings[2]]]),
+    question: [pictures.photos[1], pictures.photos[2], pictures.paintings[2]],
     answer: pictures.paintings[2]
   },
-};
+];
 
 export const isRightAnswer = (question, answer) => {
   if (!question || !Object.keys(question).includes(`type`) || !typeof answer === `String`) {
@@ -72,6 +73,8 @@ export const isRightAnswer = (question, answer) => {
   }
   return false;
 };
+
+export const tick = (state) => Object.assign({}, state, {time: state.time - 1});
 
 export const normalizeTime = (time = 0) => {
   if (typeof time !== `number`) {
@@ -108,7 +111,7 @@ export const generateCurrentStats = (state = {}, answer = ``) => {
   return newStats;
 };
 
-export const getLives = (answer = ``, lives = LIVE_POINTS) => {
+export const getLives = (answer = ``, lives = CountRule.LIVE) => {
   if (typeof answer !== `string` || typeof lives !== `number` || !states.has(answer)) {
     throw new Error(`Wrong parameter in getLives function`);
   }
@@ -132,11 +135,13 @@ export const generateNewState = (state = {}, time = 0) => {
   const answerTime = normalizeTime(time);
   const answerType = getTypeOfAnswer(answerTime);
 
+  const newLevel = games[getRandom(games.length)].name;
   const newStateStats = generateCurrentStats(state, answerType);
   const newStateLives = getLives(answerType, state.lives);
   const newStateGameCount = getGameCount(state.currentGame);
   return Object.assign({}, state, {stats: newStateStats,
-    currentGame: newStateGameCount, lives: newStateLives});
+    currentGame: newStateGameCount, lives: newStateLives,
+    level: newLevel});
 };
 
 export const countStats = (stats = {}) => {
@@ -145,16 +150,16 @@ export const countStats = (stats = {}) => {
       case `wrong`:
         return acc;
       case `correct`:
-        return acc + RIGHT_ANSWER_POINTS;
+        return acc + BonusPoint.RIGHT;
       case `fast`:
-        return acc + RIGHT_ANSWER_POINTS + FAST_ANSWER_POINTS;
+        return acc + BonusPoint.RIGHT + BonusPoint.FAST;
       case `slow`:
-        return acc + RIGHT_ANSWER_POINTS + SLOW_ANSWER_POINTS;
+        return acc + BonusPoint.RIGHT + BonusPoint.SLOW;
       default:
         return acc;
     }
   }, 0);
-  const livesBonus = stats.lives * LIVE_POINTS;
+  const livesBonus = stats.lives * BonusPoint.LIVE;
   return livesBonus + sum;
 };
 
@@ -171,6 +176,34 @@ export const resize = (frame, given) => {
     height: given.height * multiplier
   };
 };
+/* const res1 = {
+  fast: 1,
+  lives: 2,
+  slow: 2
+};
+
+const res2 = {
+  fast: 2,
+  lives: 2,
+  slow: 2
+};
+
+export const results = [
+  {
+    resultNumber: 1,
+    statsArray: [`correct`, `fast`, `slow`, `wrong`, `correct`, `correct`, `fast`, `slow`, `wrong`, `correct`],
+    resultTotal: 800,
+    bonuses: bonuses(res1),
+    finalResult: 950
+  },
+  {
+    resultNumber: 2,
+    statsArray: [`fast`, `fast`, `slow`, `wrong`, `correct`, `correct`, `fast`, `slow`, `wrong`, `correct`],
+    resultTotal: 800,
+    bonuses: bonuses(res2),
+    finalResult: 1050
+  }
+];
 
 // ONLY FOR EXAMPLE, WILL BE REMOVED
 export const bonuses = (state = {}) => {
@@ -223,4 +256,4 @@ export const results = [
     bonuses: bonuses(res2),
     finalResult: 1050
   }
-];
+]; */

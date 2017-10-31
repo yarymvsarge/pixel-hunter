@@ -1,4 +1,4 @@
-import AbstractView from '../AbstractView';
+import AbstractView from '../abstract-view';
 
 export default class GreetingView extends AbstractView {
   get template() {
@@ -20,10 +20,11 @@ export default class GreetingView extends AbstractView {
     const continueElement = this.element.querySelector(`.greeting__continue`);
     continueElement.onclick = (evt) => {
       evt.preventDefault();
-      this.onContinueClick();
+      this.onNext();
     };
   }
-  onContinueClick() {
+  onNext() {
     throw new Error(`You must to define listener to Greeting Screen`);
   }
 }
+

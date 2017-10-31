@@ -1,4 +1,3 @@
-import introDom from './views/intro/intro.js';
-import {renderPage} from './utils';
+import Application from './Application';
 
-renderPage(introDom());
+Application.showIntro();

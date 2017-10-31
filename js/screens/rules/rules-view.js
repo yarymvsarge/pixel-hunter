@@ -1,6 +1,6 @@
-import AbstractView from '../AbstractView';
-import HeaderView from '../HeaderView';
-import {rules} from '../../data';
+import AbstractView from '../abstract-view';
+import HeaderView from '../header-view';
+import {CountRule} from '../../data/data';
 
 export default class RulesView extends AbstractView {
   get template() {
@@ -8,12 +8,12 @@ export default class RulesView extends AbstractView {
     return `${header.template}
     <div class="rules">
     <h1 class="rules__title">Правила</h1>
-    <p class="rules__description">Угадай ${rules.games} раз для каждого изображения фото <img
+    <p class="rules__description">Угадай ${CountRule.GAME} раз для каждого изображения фото <img
       src="img/photo_icon.png" width="16" height="16"> или рисунок <img
       src="img/paint_icon.png" width="16" height="16" alt="">.<br>
       Фотографиями или рисунками могут быть оба изображения.<br>
-      На каждую попытку отводится ${rules.time} секунд.<br>
-      Ошибиться можно не более ${rules.lives} раз.<br>
+      На каждую попытку отводится ${CountRule.TIME} секунд.<br>
+      Ошибиться можно не более ${CountRule.LIVE} раз.<br>
       <br>
       Готовы?
     </p>
@@ -27,33 +27,33 @@ export default class RulesView extends AbstractView {
     const form = this.element.querySelector(`.rules__form`);
     const inputName = form.querySelector(`.rules__input`);
     const nextButton = form.querySelector(`.rules__button`);
-
     const backButton = this.element.querySelector(`.header__back`);
+
     inputName.oninput = (evt) => {
       evt.preventDefault();
-      this.onInput(inputName, nextButton);
+      if (inputName.value.trim() !== ``) {
+        nextButton.removeAttribute(`disabled`);
+      } else {
+        nextButton.setAttribute(`disabled`, true);
+      }
     };
 
     nextButton.onclick = (evt) => {
       evt.preventDefault();
-      this.onNextButtonClick();
+      this.onNext();
     };
 
     backButton.onclick = (evt) => {
       evt.preventDefault();
-      this.onBackButtonClick();
+      this.onBack();
     };
   }
 
-  onInput(input, button) {
-    throw new Error(`You must to define listener on inputting text`);
-  }
-
-  onNextButtonClick() {
+  onNext() {
     throw new Error(`You must to define listener on clicking OK button`);
   }
 
-  onBackButtonClick() {
+  onBack() {
     throw new Error(`You must to define listener on clicking Back button`);
   }
 }

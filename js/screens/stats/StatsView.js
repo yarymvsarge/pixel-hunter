@@ -1,4 +1,4 @@
-import AbstractView from '../AbstractView';
+/* import AbstractView from '../AbstractView';
 import HeaderView from '../HeaderView';
 import statsBlock from '../../templates/stats';
 
@@ -46,3 +46,4 @@ export default class RulesView extends AbstractView {
     throw new Error(`You must to define listener on clicking Back button`);
   }
 }
+ */

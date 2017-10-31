@@ -1,13 +1,14 @@
-import {resize} from '../data';
+import {resize} from '../data/data';
 export default class AbstractView {
   get template() {
     throw new Error(`You have to define template for view`);
   }
 
   render() {
-    const template = document.createElement(`template`);
+    const template = document.createElement(`div`);
+    template.classList.add(`central`);
     template.innerHTML = this.template;
-    return template.content;
+    return template;
   }
 
   bind() {

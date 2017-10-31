@@ -1,4 +1,4 @@
-import StatsView from './StatsView';
+/* import StatsView from './StatsView';
 import greeting from '../greeting/greeting';
 import {renderPage} from '../../utils';
 
@@ -9,3 +9,4 @@ export default (results) => {
   };
   return stats.element;
 };
+ */

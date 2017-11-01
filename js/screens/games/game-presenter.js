@@ -3,7 +3,7 @@ import GameTwoView from './GameTwoView';
 import GameThreeView from './GameThreeView';
 import Application from '../../Application';
 import {renderPage} from '../../utils';
-import {tick, initialState, games, generateNewState} from '../../data/data';
+import {tick, initialState, games, generateNewState, CountRule} from '../../data/data';
 const createLevel = (state) => {
   switch (state.level) {
     case 0:
@@ -24,19 +24,21 @@ class GamePresenter {
   }
 
   init() {
-    console.log(`hello friend`);
     renderPage(this.view);
     this._startGame();
     this.view.onContinueGame = () => {
       const wrong = this.view._answers
         .filter((answer, index) => (answer !== games[this.state.level].answer[index]));
-      if (wrong) {
-        console.log(`WRONG!!!!!!!!!!!!!`);
-        this._stopGame();
+      if (wrong.length) {
+        this._stopGame(0);
+      } else {
+        this._stopGame(this.state.time);
       }
-      this.init();
     };
     this.view.onBackButton = () => {
+      this._stopGame(-1);
+      this.state = initialState;
+      this.view = createLevel(this.state);
       Application.showGreeting();
     };
   }
@@ -49,14 +51,27 @@ class GamePresenter {
     this._timer = setInterval(() => {
       this.view._timer.data = Number(this.view._timer.data) - 1;
       this.state = tick(this.state);
+      if (this.state.time === 0) {
+        this._stopGame(this.state.time);
+      }
     }, 1000);
   }
 
-  _stopGame() {
+  _stopGame(time) {
     clearInterval(this._timer);
-    this.state = generateNewState(this.state, 0);
+    if (time === -1) {
+      return;
+    }
+    this.state = generateNewState(this.state, time);
+    if (this.state.currentGame === CountRule.GAME || this.state.lives < 0) {
+      const stats = this.state.stats;
+      this.state = initialState;
+      this.view = createLevel(this.state);
+      Application.showStats(stats);
+      return;
+    }
     this.view = createLevel(this.state);
-    // this.init();
+    this.init();
   }
 }
 

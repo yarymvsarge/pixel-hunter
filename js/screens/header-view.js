@@ -11,7 +11,7 @@ export default class HeaderView extends AbstractView {
       ${new Array(state.lives)
         .fill(`<img src="img/heart__full.svg" class="game__heart" alt="Life" width="32" height="32">`)
         .join(``)}
-      ${new Array(CountRule.LIVE - state.lives)
+      ${new Array(CountRule.LIVES - state.lives)
         .fill(`<img src="img/heart__empty.svg" class="game__heart" alt="Life" width="32" height="32">`)
         .join(``)}
     </div>`;

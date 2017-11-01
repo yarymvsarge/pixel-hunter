@@ -1,7 +1,6 @@
 import RulesView from './rules-view';
 import Application from '../../Application';
 import {renderPage} from '../../utils';
-import {initialState} from '../../data/data';
 
 class Rules {
   constructor() {
@@ -11,7 +10,7 @@ class Rules {
   init() {
     renderPage(this.view);
     this.view.onNext = () => {
-      Application.showGame(initialState);
+      Application.showGame();
     };
     this.view.onBack = () => {
       Application.showGreeting();

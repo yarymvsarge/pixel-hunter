@@ -1,12 +1,18 @@
-/* import StatsView from './StatsView';
-import greeting from '../greeting/greeting';
+import StatsView from './stats-view';
+import Application from '../../Application';
 import {renderPage} from '../../utils';
+import {generateStatsState} from '../../data/data';
 
-export default (results) => {
-  const stats = new StatsView(results);
-  stats.onBackButtonClick = () => {
-    renderPage(greeting());
-  };
-  return stats.element;
-};
- */
+class Stats {
+  init(stats) {
+    const statsState = generateStatsState(stats);
+    console.log(statsState);
+    this.view = new StatsView(statsState);
+    renderPage(this.view);
+    this.view.onBackButtonClick = () => {
+      Application.showGreeting();
+    };
+  }
+}
+
+export default new Stats();

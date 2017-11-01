@@ -2,7 +2,7 @@ import introScreen from './screens/intro/intro';
 import greetingScreen from './screens/greeting/greeting';
 import rulesScreen from './screens/rules/rules';
 import gameScreen from './screens/games/game-presenter';
-/* import statsScreen from './screens/stats/stats'; */
+import statsScreen from './screens/stats/stats';
 
 export default class Application {
 
@@ -22,8 +22,8 @@ export default class Application {
     gameScreen.init();
   }
 
- /* static showStats(stats) {
+  static showStats(stats) {
     statsScreen.init(stats);
-  } */
+  }
 
 }

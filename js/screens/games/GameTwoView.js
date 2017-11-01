@@ -40,6 +40,7 @@ export default class GameTwoView extends AbstractView {
         evt.preventDefault();
         const checked = form.querySelectorAll(`input[type='radio']:checked`);
         if (checked) {
+          this._answers = Array.from(checked).map((elem) => elem.value);
           this.onContinueGame();
         }
       });
@@ -50,7 +51,7 @@ export default class GameTwoView extends AbstractView {
     const backButton = this.element.querySelector(`.header__back`);
     backButton.onclick = (evt) => {
       evt.preventDefault();
-      this.onBackButtonClick();
+      this.onBackButton();
     };
   }
 
@@ -58,7 +59,7 @@ export default class GameTwoView extends AbstractView {
     throw new Error(`You must to define listener on clicking radio buttons`);
   }
 
-  onBackButtonClick() {
+  onBackButton() {
     throw new Error(`You must to define listener on clicking Back button`);
   }
 }

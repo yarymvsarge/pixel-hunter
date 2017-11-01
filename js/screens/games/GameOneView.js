@@ -46,6 +46,7 @@ export default class GameOneView extends AbstractView {
       });
     });
     this.resizeImages(form.querySelectorAll(`img`));
+
     const backButton = this.element.querySelector(`.header__back`);
     backButton.onclick = (evt) => {
       evt.preventDefault();

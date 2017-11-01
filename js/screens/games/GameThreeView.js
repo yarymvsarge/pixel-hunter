@@ -29,6 +29,7 @@ export default class GameThreeView extends AbstractView {
     Array.from(options).forEach((answer) => {
       answer.addEventListener(`click`, (evt) => {
         evt.preventDefault();
+        this._answers = [answer.querySelector(`img`).src];
         this.onContinueGame();
       });
     });
@@ -37,7 +38,7 @@ export default class GameThreeView extends AbstractView {
     const backButton = this.element.querySelector(`.header__back`);
     backButton.onclick = (evt) => {
       evt.preventDefault();
-      this.onBackButtonClick();
+      this.onBackButton();
     };
   }
 
@@ -45,7 +46,7 @@ export default class GameThreeView extends AbstractView {
     throw new Error(`You must to define listener on clicking one of answers`);
   }
 
-  onBackButtonClick() {
+  onBackButton() {
     throw new Error(`You must to define listener on clicking Back button`);
   }
 }

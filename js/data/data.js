@@ -3,7 +3,7 @@ const SLOW_ANSWER_BOUND_TIME = 10;
 
 export const CountRule = Object.freeze({
   GAME: 10,
-  LIVE: 3,
+  LIVES: 3,
   TIME: 30
 });
 
@@ -11,14 +11,14 @@ export const BonusPoint = Object.freeze({
   CORRECT: 100,
   FAST: 50,
   SLOW: -50,
-  LIVE: 50
+  LIVES: 50
 });
 
 const statsArray = Array(CountRule.GAME).fill(`unknown`);
 
 export const initialState = Object.freeze({
   currentGame: 0,
-  lives: CountRule.LIVE,
+  lives: CountRule.LIVES,
   time: CountRule.TIME,
   level: 0,
   stats: statsArray
@@ -61,7 +61,7 @@ export const games = [
     name: 2,
     task: `Найдите рисунок среди изображений`,
     question: [pictures.photos[1], pictures.photos[2], pictures.paintings[2]],
-    answer: pictures.paintings[2]
+    answer: [pictures.paintings[2]]
   },
 ];
 
@@ -76,14 +76,14 @@ export const isRightAnswer = (question, answer) => {
 
 export const tick = (state) => Object.assign({}, state, {time: state.time - 1});
 
-export const normalizeTime = (time = 0) => {
+const normalizeTime = (time = 0) => {
   if (typeof time !== `number`) {
     throw new Error(`Wrong parameter in normalizeTime function`);
   }
   return (time < 0) ? 0 : time;
 };
 
-export const getTypeOfAnswer = (time = 0) => {
+const getTypeOfAnswer = (time = 0) => {
   if (typeof time !== `number`) {
     throw new Error(`Wrong parameter in getTypeOfAnswer function`);
   }
@@ -97,7 +97,7 @@ export const getTypeOfAnswer = (time = 0) => {
   return `fast`;
 };
 
-export const generateCurrentStats = (state = {}, answer = ``) => {
+const generateCurrentStats = (state = {}, answer = ``) => {
   if ((typeof state !== `object`) || !Object.keys(state).includes(`stats`)
     || !Object.keys(state).includes(`currentGame`) || typeof answer !== `string`) {
     throw new Error(`Wrong parameter in generateCurrentStats function`);
@@ -111,7 +111,7 @@ export const generateCurrentStats = (state = {}, answer = ``) => {
   return newStats;
 };
 
-export const getLives = (answer = ``, lives = CountRule.LIVE) => {
+const getLives = (answer = ``, lives = CountRule.LIVES) => {
   if (typeof answer !== `string` || typeof lives !== `number` || !states.has(answer)) {
     throw new Error(`Wrong parameter in getLives function`);
   }
@@ -121,7 +121,7 @@ export const getLives = (answer = ``, lives = CountRule.LIVE) => {
   return lives;
 };
 
-export const getGameCount = (gameCount = 0) => {
+const getGameCount = (gameCount = 0) => {
   if (typeof gameCount !== `number`) {
     throw new Error(`Wrong parameter in getGameCount function`);
   }
@@ -141,26 +141,64 @@ export const generateNewState = (state = {}, time = 0) => {
   const newStateGameCount = getGameCount(state.currentGame);
   return Object.assign({}, state, {stats: newStateStats,
     currentGame: newStateGameCount, lives: newStateLives,
-    level: newLevel});
+    level: newLevel, time: CountRule.TIME});
 };
 
-export const countStats = (stats = {}) => {
-  const sum = stats.statsArray.reduce((acc, value) => {
-    switch (value) {
-      case `wrong`:
-        return acc;
-      case `correct`:
-        return acc + BonusPoint.RIGHT;
-      case `fast`:
-        return acc + BonusPoint.RIGHT + BonusPoint.FAST;
-      case `slow`:
-        return acc + BonusPoint.RIGHT + BonusPoint.SLOW;
-      default:
-        return acc;
-    }
+const getBonusInfo = (state = {}) => {
+  return [
+    {
+      title: `Бонус за скорость`,
+      tag: `fast`,
+      amount: state.fast,
+      bonusName: `fast`,
+    },
+    {
+      title: `Бонус за жизни`,
+      tag: `heart`,
+      amount: state.lives,
+      bonusName: `lives`,
+    },
+    {
+      title: `Штраф за медлительность`,
+      tag: `slow`,
+      amount: state.slow,
+      bonusName: `slow`,
+    },
+  ];
+};
+
+const groupAnswers = (stats = []) => {
+  const filterStats = (str) => {
+    return stats.filter((value) => value === str);
+  };
+  const fast = filterStats(`fast`).length;
+  const wrongCount = filterStats(`wrong`).length;
+  const lives = CountRule.LIVES - wrongCount;
+  const correct = stats.length - wrongCount;
+  const slow = filterStats(`slow`).length;
+  return {fast, lives, correct, slow};
+};
+
+const getBonuses = (answers) => getBonusInfo(answers).filter((bonus) => bonus.amount !== 0);
+
+const isWin = (answers) => (answers.lives >= 0) ? true : false;
+
+const countSum = (answers = {}) => Object.keys(answers)
+  .reduce((acc, key) => {
+    const upperKey = key.toUpperCase();
+    const bonus = BonusPoint[upperKey];
+    return (acc + bonus * answers[key]);
   }, 0);
-  const livesBonus = stats.lives * BonusPoint.LIVE;
-  return livesBonus + sum;
+
+export const generateStatsState = (stats = []) => {
+  const answers = groupAnswers(stats);
+  const win = isWin(answers);
+  if (!win) {
+    return [{stats, win}];
+  }
+  const bonuses = getBonuses(answers);
+  const sum = countSum(answers);
+  return [{stats, win, bonuses, sum}];
 };
 
 export const resize = (frame, given) => {
@@ -176,84 +214,3 @@ export const resize = (frame, given) => {
     height: given.height * multiplier
   };
 };
-/* const res1 = {
-  fast: 1,
-  lives: 2,
-  slow: 2
-};
-
-const res2 = {
-  fast: 2,
-  lives: 2,
-  slow: 2
-};
-
-export const results = [
-  {
-    resultNumber: 1,
-    statsArray: [`correct`, `fast`, `slow`, `wrong`, `correct`, `correct`, `fast`, `slow`, `wrong`, `correct`],
-    resultTotal: 800,
-    bonuses: bonuses(res1),
-    finalResult: 950
-  },
-  {
-    resultNumber: 2,
-    statsArray: [`fast`, `fast`, `slow`, `wrong`, `correct`, `correct`, `fast`, `slow`, `wrong`, `correct`],
-    resultTotal: 800,
-    bonuses: bonuses(res2),
-    finalResult: 1050
-  }
-];
-
-// ONLY FOR EXAMPLE, WILL BE REMOVED
-export const bonuses = (state = {}) => {
-  return [
-    {
-      title: `Бонус за скорость`,
-      tag: `fast`,
-      amount: state.fast,
-      bonusPoints: points.fastAnswer,
-    },
-    {
-      title: `Бонус за жизни`,
-      tag: `heart`,
-      amount: state.lives,
-      bonusPoints: points.liveBonus,
-    },
-    {
-      title: `Штраф за медлительность`,
-      tag: `slow`,
-      amount: state.slow,
-      bonusPoints: points.slowAnswer,
-    },
-  ];
-};
-
-const res1 = {
-  fast: 1,
-  lives: 2,
-  slow: 2
-};
-
-const res2 = {
-  fast: 2,
-  lives: 2,
-  slow: 2
-};
-
-export const results = [
-  {
-    resultNumber: 1,
-    statsArray: [`correct`, `fast`, `slow`, `wrong`, `correct`, `correct`, `fast`, `slow`, `wrong`, `correct`],
-    resultTotal: 800,
-    bonuses: bonuses(res1),
-    finalResult: 950
-  },
-  {
-    resultNumber: 2,
-    statsArray: [`fast`, `fast`, `slow`, `wrong`, `correct`, `correct`, `fast`, `slow`, `wrong`, `correct`],
-    resultTotal: 800,
-    bonuses: bonuses(res2),
-    finalResult: 1050
-  }
-]; */

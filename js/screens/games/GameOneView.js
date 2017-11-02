@@ -1,21 +1,21 @@
 import AbstractView from '../abstract-view';
 import HeaderView from '../header-view';
 import statsBlock from '../../templates/stats';
-import {games} from '../../data/data';
 
 export default class GameOneView extends AbstractView {
-  constructor(state) {
+  constructor(state, level) {
     super();
     this.state = state;
+    this.level = level;
   }
   get template() {
     const header = new HeaderView(this.state);
     return `${header.template}
     <div class="game">
-    <p class="game__task">${games[this.state.level].task}</p>
+    <p class="game__task">${this.level.task}</p>
     <form class="game__content">
       ${Array(2).fill(``).map((value, index) => `<div class="game__option">
-        <img src="${Array.from(games[this.state.level].question)[index]}" alt="Option ${index + 1}" width="468" height="458">
+        <img src="${Array.from(this.level.question)[index]}" alt="Option ${index + 1}" width="468" height="458">
         <label class="game__answer game__answer--photo">
           <input name="question${index + 1}" type="radio" value="photo">
           <span>Фото</span>

@@ -14,65 +14,28 @@ export const BonusPoint = Object.freeze({
   LIVES: 50
 });
 
+export const AnswerType = Object.freeze({
+  CORRECT: `correct`,
+  FAST: `fast`,
+  SLOW: `slow`,
+  WRONG: `wrong`,
+  UNKNOWN: `unknown`
+});
+
 const statsArray = Array(CountRule.GAME).fill(`unknown`);
 
 export const initialState = Object.freeze({
   currentGame: 0,
   lives: CountRule.LIVES,
   time: CountRule.TIME,
-  level: 0,
   stats: statsArray
 });
 
-const states = new Set([...[`unknown`, `fast`, `slow`, `wrong`, `correct`]]);
+const states = Object.values(AnswerType);
 
-const pictures = {
-  paintings: [
-    `https://k42.kn3.net/CF42609C8.jpg`,
-    `https://k42.kn3.net/D2F0370D6.jpg`,
-    `https://k32.kn3.net/5C7060EC5.jpg`
-  ],
-  photos: [
-    `http://i.imgur.com/1KegWPz.jpg`,
-    `https://i.imgur.com/DiHM5Zb.jpg`,
-    `http://i.imgur.com/DKR1HtB.jpg`
-  ]
-};
+export const codeStats = (stats = []) => stats.map((item) => states.indexOf(item)).join(``);
 
-export const getRandom = (n) => Math.floor(Math.random() * n);
-
-export const games = [
-  {
-    // name: `TwoPhotoOrPicture`,
-    name: 0,
-    task: `Угадайте для каждого изображения фото или рисунок?`,
-    question: [pictures.paintings[0], pictures.photos[0]],
-    answer: [`paint`, `photo`]
-  },
-  {
-    // name: `OnePhotoOrPicture`,
-    name: 1,
-    task: `Угадай, фото или рисунок?`,
-    question: [pictures.paintings[1]],
-    answer: [`paint`]
-  },
-  {
-    // name: `PictureAmongPhotos`,
-    name: 2,
-    task: `Найдите рисунок среди изображений`,
-    question: [pictures.photos[1], pictures.photos[2], pictures.paintings[2]],
-    answer: [pictures.paintings[2]]
-  },
-];
-
-export const isRightAnswer = (question, answer) => {
-  if (!question || !Object.keys(question).includes(`type`) || !typeof answer === `String`) {
-    return false;
-  } else if (question.type === answer) {
-    return true;
-  }
-  return false;
-};
+export const decodeStats = (stats = ``) => stats.split(``).map((value) => states[value]);
 
 export const tick = (state) => Object.assign({}, state, {time: state.time - 1});
 
@@ -88,13 +51,13 @@ const getTypeOfAnswer = (time = 0) => {
     throw new Error(`Wrong parameter in getTypeOfAnswer function`);
   }
   if (time <= 0) {
-    return `wrong`;
+    return AnswerType.WRONG;
   } else if (time > 0 && time < SLOW_ANSWER_BOUND_TIME) {
-    return `slow`;
+    return AnswerType.SLOW;
   } else if (time >= SLOW_ANSWER_BOUND_TIME && time < FAST_ANSWER_BOUND_TIME) {
-    return `correct`;
+    return AnswerType.CORRECT;
   }
-  return `fast`;
+  return AnswerType.FAST;
 };
 
 const generateCurrentStats = (state = {}, answer = ``) => {
@@ -102,7 +65,7 @@ const generateCurrentStats = (state = {}, answer = ``) => {
     || !Object.keys(state).includes(`currentGame`) || typeof answer !== `string`) {
     throw new Error(`Wrong parameter in generateCurrentStats function`);
   }
-  if (!states.has(answer)) {
+  if (!states.includes(answer)) {
     throw new Error(`Wrong answer`);
   }
   const {currentGame, stats} = state;
@@ -112,20 +75,13 @@ const generateCurrentStats = (state = {}, answer = ``) => {
 };
 
 const getLives = (answer = ``, lives = CountRule.LIVES) => {
-  if (typeof answer !== `string` || typeof lives !== `number` || !states.has(answer)) {
+  if (typeof answer !== `string` || typeof lives !== `number` || !states.includes(answer)) {
     throw new Error(`Wrong parameter in getLives function`);
   }
   if (answer === `wrong`) {
     return lives - 1;
   }
   return lives;
-};
-
-const getGameCount = (gameCount = 0) => {
-  if (typeof gameCount !== `number`) {
-    throw new Error(`Wrong parameter in getGameCount function`);
-  }
-  return gameCount + 1;
 };
 
 export const generateNewState = (state = {}, time = 0) => {
@@ -135,13 +91,11 @@ export const generateNewState = (state = {}, time = 0) => {
   const answerTime = normalizeTime(time);
   const answerType = getTypeOfAnswer(answerTime);
 
-  const newLevel = games[getRandom(games.length)].name;
   const newStateStats = generateCurrentStats(state, answerType);
   const newStateLives = getLives(answerType, state.lives);
-  const newStateGameCount = getGameCount(state.currentGame);
   return Object.assign({}, state, {stats: newStateStats,
-    currentGame: newStateGameCount, lives: newStateLives,
-    level: newLevel, time: CountRule.TIME});
+    currentGame: state.currentGame + 1, lives: newStateLives,
+    time: CountRule.TIME});
 };
 
 const getBonusInfo = (state = {}) => {
@@ -171,11 +125,11 @@ const groupAnswers = (stats = []) => {
   const filterStats = (str) => {
     return stats.filter((value) => value === str);
   };
-  const fast = filterStats(`fast`).length;
-  const wrongCount = filterStats(`wrong`).length;
+  const fast = filterStats(AnswerType.FAST).length;
+  const wrongCount = filterStats(AnswerType.WRONG).length;
   const lives = CountRule.LIVES - wrongCount;
   const correct = stats.length - wrongCount;
-  const slow = filterStats(`slow`).length;
+  const slow = filterStats(AnswerType.SLOW).length;
   return {fast, lives, correct, slow};
 };
 
@@ -191,6 +145,9 @@ const countSum = (answers = {}) => Object.keys(answers)
   }, 0);
 
 export const generateStatsState = (stats = []) => {
+  if (stats.length === 0) {
+    return [{win: false}];
+  }
   const answers = groupAnswers(stats);
   const win = isWin(answers);
   if (!win) {

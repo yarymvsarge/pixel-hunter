@@ -15,4 +15,4 @@ class Intro {
   }
 }
 
-export default new Intro();
+export default Intro;

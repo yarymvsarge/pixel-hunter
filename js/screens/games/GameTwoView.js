@@ -1,21 +1,21 @@
 import AbstractView from '../abstract-view';
 import HeaderView from '../header-view';
 import statsBlock from '../../templates/stats';
-import {games} from '../../data/data';
 
 export default class GameTwoView extends AbstractView {
-  constructor(state) {
+  constructor(state, level) {
     super();
     this.state = state;
+    this.level = level;
   }
   get template() {
     const header = new HeaderView(this.state);
     return `${header.template}
     <div class="game">
-    <p class="game__task">${games[this.state.level].task}</p>
+    <p class="game__task">${this.level.task}</p>
     <form class="game__content game__content--wide">
       <div class="game__option">
-        <img src="${games[this.state.level].question}" alt="Option 1" width="705" height="455">
+        <img src="${this.level.question}" alt="Option 1" width="705" height="455">
         <label class="game__answer  game__answer--photo">
           <input name="question1" type="radio" value="photo">
           <span>Фото</span>

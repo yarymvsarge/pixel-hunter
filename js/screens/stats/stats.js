@@ -6,7 +6,6 @@ import {generateStatsState} from '../../data/data';
 class Stats {
   init(stats) {
     const statsState = generateStatsState(stats);
-    console.log(statsState);
     this.view = new StatsView(statsState);
     renderPage(this.view);
     this.view.onBackButtonClick = () => {
@@ -15,4 +14,4 @@ class Stats {
   }
 }
 
-export default new Stats();
+export default Stats;

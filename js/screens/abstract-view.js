@@ -12,7 +12,6 @@ export default class AbstractView {
   }
 
   bind() {
-
   }
 
   get element() {

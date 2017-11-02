@@ -50,10 +50,10 @@ export default class RulesView extends AbstractView {
   }
 
   onNext() {
-    throw new Error(`You must to define listener on clicking OK button`);
+    throw new Error(`You must to define listener on going next`);
   }
 
   onBack() {
-    throw new Error(`You must to define listener on clicking Back button`);
+    throw new Error(`You must to define listener on returning back`);
   }
 }
